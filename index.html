@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIPOC — An Intelligent Piece of Code</title>
+  <meta name="description" content="AIPOC — An Intelligent Piece of Code. A superintelligence, coming soon." />
+  <meta name="theme-color" content="#070a09" />
+
+  <!-- Favicon — emerald AIPOC mark -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" />
+  <link rel="apple-touch-icon" href="favicon.svg" />
+
+  <meta property="og:title" content="AIPOC — An Intelligent Piece of Code" />
+  <meta property="og:description" content="A superintelligence, coming soon." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://aipoc.si" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg:        #070a09;
+      --bg-soft:   #0b100e;
+      --surface:   #0e1512;
+      --line:      rgba(109, 231, 183, 0.12);
+      --emerald:   #10b981;
+      --mint:      #6ee7b7;
+      --ink:       #e8f1ec;
+      --muted:     #8a9b92;
+      --faint:     #566860;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Manrope', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Ambient light — one soft emerald glow, top-center */
+    .ambient {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(60% 50% at 50% 8%, rgba(16,185,129,0.16), transparent 70%),
+        radial-gradient(45% 40% at 50% 100%, rgba(16,185,129,0.07), transparent 70%);
+    }
+    /* Fine grain for a premium, non-flat surface */
+    .grain {
+      position: fixed; inset: 0; z-index: 1; pointer-events: none;
+      opacity: 0.4; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    }
+
+    .stage {
+      position: relative; z-index: 2;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: space-between;
+      padding: 40px 28px 34px;
+    }
+
+    /* ---------- Header ---------- */
+    header {
+      width: 100%; max-width: 1080px;
+      display: flex; align-items: center; justify-content: space-between;
+      opacity: 0; animation: fade .9s ease forwards .1s;
+    }
+    .wordmark {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700; font-size: 17px;
+      letter-spacing: 1px;
+      display: flex; align-items: center; gap: 11px;
+    }
+    .mark {
+      width: 22px; height: 22px; border-radius: 7px;
+      background: linear-gradient(145deg, var(--mint), var(--emerald));
+      box-shadow: 0 0 18px rgba(16,185,129,0.45);
+      position: relative; flex-shrink: 0;
+    }
+    .mark::after {
+      content: ""; position: absolute; inset: 6px;
+      border-radius: 3px; background: var(--bg);
+    }
+    .status {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; letter-spacing: 1.5px;
+      color: var(--muted);
+      display: flex; align-items: center; gap: 9px;
+    }
+    .status .pip {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--mint);
+      box-shadow: 0 0 0 0 rgba(110,231,183,0.5);
+      animation: beacon 2.4s ease-out infinite;
+    }
+    @keyframes beacon {
+      0%   { box-shadow: 0 0 0 0 rgba(110,231,183,0.5); }
+      70%  { box-shadow: 0 0 0 8px rgba(110,231,183,0); }
+      100% { box-shadow: 0 0 0 0 rgba(110,231,183,0); }
+    }
+
+    /* ---------- Center ---------- */
+    main {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      max-width: 640px; width: 100%;
+      gap: 30px;
+      padding: 48px 0;
+    }
+
+    /* Emblem — one ring + a breathing core */
+    .emblem {
+      position: relative;
+      width: 132px; height: 132px;
+      display: grid; place-items: center;
+      opacity: 0; animation: rise 1.2s cubic-bezier(.2,.8,.2,1) forwards .2s;
+    }
+    .emblem .ring {
+      position: absolute; inset: 0; border-radius: 50%;
+      border: 1px solid var(--line);
+    }
+    .emblem .ring::before {
+      content: ""; position: absolute; inset: -1px; border-radius: 50%;
+      background: conic-gradient(from 90deg, transparent 0 72%, var(--mint) 86%, transparent 100%);
+      -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1px));
+              mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1px));
+      animation: spin 7s linear infinite;
+    }
+    .emblem .ring.inner { inset: 20px; opacity: .6; }
+    .emblem .ring.inner::before { animation-duration: 11s; animation-direction: reverse; }
+    .core {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: radial-gradient(circle at 38% 34%, #d9fff0, var(--mint) 38%, var(--emerald) 78%, #0b6b4d 100%);
+      box-shadow: 0 0 28px rgba(16,185,129,0.55), inset 0 0 14px rgba(255,255,255,0.3);
+      animation: breathe 4.5s ease-in-out infinite;
+    }
+    @keyframes breathe {
+      0%,100% { transform: scale(1);    box-shadow: 0 0 24px rgba(16,185,129,0.45), inset 0 0 14px rgba(255,255,255,0.3); }
+      50%     { transform: scale(1.08); box-shadow: 0 0 40px rgba(16,185,129,0.7),  inset 0 0 14px rgba(255,255,255,0.4); }
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .copy { opacity: 0; animation: rise 1s ease forwards .55s; }
+    .eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px; letter-spacing: 4.5px;
+      text-transform: uppercase;
+      color: var(--emerald);
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-family: 'Sora', sans-serif;
+      font-weight: 600;
+      font-size: clamp(56px, 15vw, 118px);
+      letter-spacing: -2px;
+      line-height: 1;
+      color: var(--ink);
+      text-wrap: balance;
+    }
+    h1 .glow {
+      background: linear-gradient(180deg, #ffffff, var(--mint) 70%, var(--emerald));
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .tagline {
+      margin-top: 22px;
+      font-size: clamp(16px, 2.6vw, 19px);
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.55;
+      text-wrap: balance;
+    }
+    .tagline b { color: var(--ink); font-weight: 500; }
+
+    /* ---------- Countdown (quiet) ---------- */
+    .countdown {
+      display: flex; align-items: center; gap: 22px;
+      opacity: 0; animation: rise 1s ease forwards .75s;
+    }
+    .cd { display: flex; flex-direction: column; align-items: center; gap: 7px; }
+    .cd .n {
+      font-family: 'Sora', sans-serif; font-weight: 500;
+      font-size: 30px; color: var(--ink);
+      font-variant-numeric: tabular-nums;
+      min-width: 1.6ch;
+    }
+    .cd .l {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--faint);
+    }
+    .countdown .sep { color: var(--line); font-size: 24px; margin-top: -14px; }
+
+    /* ---------- Signup ---------- */
+    .signup {
+      width: 100%; max-width: 440px;
+      opacity: 0; animation: rise 1s ease forwards .9s;
+    }
+    .field {
+      display: flex; gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 7px 7px 7px 18px;
+      transition: border-color .25s, box-shadow .25s;
+    }
+    .field:focus-within {
+      border-color: rgba(16,185,129,0.55);
+      box-shadow: 0 0 0 4px rgba(16,185,129,0.1);
+    }
+    .field input {
+      flex: 1; background: transparent; border: none; outline: none;
+      color: var(--ink); font-family: 'Manrope', sans-serif; font-size: 15px;
+    }
+    .field input::placeholder { color: var(--faint); }
+    .field button {
+      border: none; cursor: pointer;
+      font-family: 'Sora', sans-serif; font-weight: 600;
+      font-size: 14px; color: #06251b;
+      background: linear-gradient(145deg, var(--mint), var(--emerald));
+      padding: 0 22px; border-radius: 9px;
+      transition: filter .2s, transform .15s;
+    }
+    .field button:hover { filter: brightness(1.08); }
+    .field button:active { transform: scale(.98); }
+    .note {
+      margin-top: 13px; font-size: 13px; color: var(--faint);
+      font-family: 'Manrope', sans-serif; transition: color .3s;
+    }
+    .note.ok { color: var(--mint); }
+
+    /* ---------- Footer ---------- */
+    footer {
+      width: 100%; max-width: 1080px;
+      display: flex; align-items: center; justify-content: space-between;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; letter-spacing: 0.5px; color: var(--faint);
+      opacity: 0; animation: fade 1s ease forwards 1.1s;
+    }
+    .links { display: flex; gap: 20px; }
+    .links a { color: var(--faint); text-decoration: none; transition: color .25s; }
+    .links a:hover { color: var(--mint); }
+
+    *:focus-visible { outline: 2px solid var(--emerald); outline-offset: 3px; border-radius: 4px; }
+
+    @keyframes fade { to { opacity: 1; } }
+    @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 560px) {
+      .status { display: none; }
+      footer { flex-direction: column; gap: 12px; }
+      .countdown { gap: 14px; }
+      .cd .n { font-size: 26px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before { animation: none !important; }
+      .copy, .emblem, .countdown, .signup, header, footer { opacity: 1 !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient"></div>
+
+  <div class="stage">
+    <header>
+      <div class="wordmark"><span class="mark"></span> AIPOC</div>
+      <div class="status"><span class="pip"></span> COMING SOON</div>
+    </header>
+
+    <main>
+      <div class="emblem" aria-hidden="true">
+        <div class="ring"></div>
+        <div class="ring inner"></div>
+        <div class="core"></div>
+      </div>
+
+      <div class="copy">
+        <div class="eyebrow">An Intelligent Piece of Code</div>
+        <h1><span class="glow">AIPOC</span></h1>
+        <p class="tagline">A <b>superintelligence</b> is taking shape —<br />thoughtful, capable, and almost here.</p>
+      </div>
+
+      <div class="countdown" id="countdown" aria-label="Launch countdown">
+        <div class="cd"><span class="n" id="d">00</span><span class="l">Days</span></div>
+        <span class="sep">·</span>
+        <div class="cd"><span class="n" id="h">00</span><span class="l">Hours</span></div>
+        <span class="sep">·</span>
+        <div class="cd"><span class="n" id="m">00</span><span class="l">Mins</span></div>
+        <span class="sep">·</span>
+        <div class="cd"><span class="n" id="s">00</span><span class="l">Secs</span></div>
+      </div>
+
+      <form class="signup" id="form">
+        <div class="field">
+          <input type="email" id="email" placeholder="Enter your email" required aria-label="Email address" />
+          <button type="submit">Notify me</button>
+        </div>
+        <div class="note" id="note">Be the first to know when AIPOC goes live.</div>
+      </form>
+    </main>
+
+    <footer>
+      <div>© <span id="year"></span> AIPOC.SI</div>
+      <div class="links">
+        <a href="#">Twitter</a>
+        <a href="#">GitHub</a>
+        <a href="#">LinkedIn</a>
+      </div>
+    </footer>
+  </div>
+
+  <div class="grain"></div>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    /* Countdown — persisted 30-day target per visitor */
+    const KEY = 'aipoc_launch';
+    let target = Number(localStorage.getItem(KEY));
+    if (!target) { target = Date.now() + 30 * 864e5; localStorage.setItem(KEY, target); }
+    const el = { d: d_(), h: h_(), m: m_(), s: s_() };
+    function d_(){return document.getElementById('d');} function h_(){return document.getElementById('h');}
+    function m_(){return document.getElementById('m');} function s_(){return document.getElementById('s');}
+    const pad = n => String(n).padStart(2, '0');
+    function tick() {
+      let t = Math.max(0, target - Date.now());
+      const d = Math.floor(t/864e5); t -= d*864e5;
+      const h = Math.floor(t/36e5);  t -= h*36e5;
+      const m = Math.floor(t/6e4);   t -= m*6e4;
+      const s = Math.floor(t/1e3);
+      el.d.textContent = pad(d); el.h.textContent = pad(h);
+      el.m.textContent = pad(m); el.s.textContent = pad(s);
+    }
+    tick(); setInterval(tick, 1000);
+
+    /* Signup */
+    const form = document.getElementById('form');
+    const note = document.getElementById('note');
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      if (!email) return;
+      note.textContent = "You're on the list — we'll be in touch soon.";
+      note.classList.add('ok');
+      form.querySelector('input').value = '';
+    });
+  </script>
+</body>
+</html>
